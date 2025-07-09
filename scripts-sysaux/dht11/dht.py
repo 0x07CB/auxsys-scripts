@@ -9,7 +9,7 @@ import pigpio
 import argparse
 import sys
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 def convert_celsius_to_fahrenheit(celsius: int):
     """
