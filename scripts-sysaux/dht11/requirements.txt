@@ -1,0 +1,4 @@
+RPi.GPIO
+colorzero==2.0
+gpiozero==2.0.1
+pigpio==1.78
