@@ -1,0 +1,13 @@
+[Unit]
+Description=Contrôle automatique de la veilleuse par rapport a la luminosite de la piece via GPIO pour Raspberry Pi
+After=multi-user.target
+
+[Service]
+ExecStart=/opt/light_auto/light_auto.py
+Restart=always
+RestartSec=5
+User=gpiouser
+Group=gpiouser
+
+[Install]
+WantedBy=multi-user.target
