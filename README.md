@@ -10,6 +10,7 @@ scripts-sysaux/
 │   ├── espeak-dht11-humidity.sh
 │   ├── espeak-dht11-temperature.sh
 │   ├── install-scripts.sh
+│   ├── install-python-deps.sh
 │   └── requirements.txt
 ├── light_auto/
 │   ├── install-scripts.sh
@@ -27,6 +28,7 @@ scripts-sysaux/
 - **dht.py** : Script Python pour lire les données du capteur DHT11 via pigpio.
 - **espeak-dht11-humidity.sh** / **espeak-dht11-temperature.sh** : Scripts shell pour vocaliser la température ou l'humidité via espeak-ng.
 - **install-scripts.sh** : Installe les scripts, dépendances et crée les liens symboliques nécessaires.
+- **install-python-deps.sh** : Installe les dépendances Python avec options d'installation interactive.
 - **requirements.txt** : Dépendances Python nécessaires (pigpio, gpiozero, etc).
 
 ### Installation (dht11)
@@ -34,6 +36,30 @@ scripts-sysaux/
 cd scripts-sysaux/dht11
 sudo ./install-scripts.sh
 ```
+
+### Installation des dépendances Python (DHT11)
+
+Le script `install-python-deps.sh` vous propose plusieurs modes d'installation :
+- **venv local** : crée un environnement virtuel Python dans le dossier courant.
+- **utilisateur courant** : installe les paquets pour l'utilisateur actuel.
+- **autre utilisateur** : installe pour un utilisateur système spécifique.
+
+Lancez :
+```bash
+cd scripts-sysaux/dht11
+./install-python-deps.sh
+```
+et suivez les instructions.
+
+> **Note** : L'installation complète (`install-scripts.sh`) gère aussi la copie des scripts, la création des liens symboliques, et l'ajout au groupe `audio` si besoin.
+
+### Mise à jour des scripts
+
+Pour mettre à jour les scripts, relancez simplement le script d'installation :
+```bash
+sudo ./install-scripts.sh
+```
+Les anciens fichiers sont sauvegardés avec l'extension `.bak` si besoin.
 
 ### Utilisation
 - Pour lire la température :
