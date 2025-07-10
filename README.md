@@ -61,6 +61,29 @@ sudo ./install-scripts.sh
 ```
 Les anciens fichiers sont sauvegardés avec l'extension `.bak` si besoin.
 
+### Instructions pour connecter le capteur DHT11
+
+Le capteur DHT11 possède trois broches principales :
+- **VCC** : à connecter à une source d'alimentation 5V ou 3.3V sur le Raspberry Pi.
+- **DATA** : à connecter à une broche GPIO du Raspberry Pi (par défaut GPIO 4).
+- **GND** : à connecter à une broche de masse (GND) sur le Raspberry Pi.
+
+#### Étapes pour connecter le capteur DHT11 :
+1. Identifiez les broches du capteur DHT11 (VCC, DATA, GND).
+2. Connectez la broche **VCC** à une broche d'alimentation 5V ou 3.3V du Raspberry Pi.
+3. Connectez la broche **DATA** à la broche GPIO 4 (ou une autre broche GPIO si spécifiée dans le script).
+4. Connectez la broche **GND** à une broche de masse (GND) du Raspberry Pi.
+5. Assurez-vous que le démon pigpio est actif sur le Raspberry Pi :
+   ```bash
+   sudo pigpiod
+   ```
+6. Testez la connexion en exécutant le script :
+   ```bash
+   dht11.py --temperature --humidity
+   ```
+
+> **Note** : Ce script est compatible avec les Raspberry Pi 2, 3 et 4. Il n'a pas encore été testé sur le Raspberry Pi 5, mais une adaptation est prévue pour cette plateforme dans le futur.
+
 ### Utilisation
 - Pour lire la température :
   ```bash
