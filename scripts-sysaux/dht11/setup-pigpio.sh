@@ -112,7 +112,6 @@ else
 fi
 
 
-
 # Fonction pour ajouter des utilisateurs au groupe gpio avec gestion des erreurs
 function add_users_to_gpio_group() {
     local ALL_USERS_VALID=true
