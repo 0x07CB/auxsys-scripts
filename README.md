@@ -210,5 +210,76 @@ sudo ./install-scripts.sh
 - espeak-ng, sox
 - Un Raspberry Pi avec accès aux GPIO
 
+## Configuration GPIO dans /boot/firmware/config.txt
+
+Pour garantir le bon fonctionnement des scripts d'automatisation (capteur DHT11, capteur de luminosité, éclairage LED), il est nécessaire de configurer les broches GPIO au niveau du système. Depuis les dernières versions de Raspberry Pi OS et distributions similaires, cette configuration se fait dans le fichier `/boot/firmware/config.txt`.
+
+### Où modifier ?
+
+- Le fichier se trouve à l'emplacement : `/boot/firmware/config.txt`
+- Il est accessible depuis le système principal (avec les droits root) ou en montant la carte SD sur un autre ordinateur.
+
+### Bloc de configuration à ajouter ou vérifier
+
+Ajoutez ou vérifiez la présence du bloc suivant à la fin du fichier (après toute configuration existante) :
+
+```ini
+[all]
+# ECLAIRAGE LED
+gpio=23=op,dl
+
+# DHT11 SENSOR
+gpio=4=ip
+
+# capteur de luminosite
+gpio=27=ip
+```
+
+### Détail par fonctionnalité
+
+#### 1. Capteur DHT11 (Température & Humidité)
+- **Ligne concernée :**
+  ```ini
+  gpio=4=ip
+  ```
+- **Explication :**
+  - Configure la broche GPIO 4 en entrée (input) pour le capteur DHT11.
+  - Si vous utilisez une autre broche (option `--gpio` dans les scripts), adaptez le numéro ici.
+
+#### 2. Éclairage automatique (LED)
+- **Ligne concernée :**
+  ```ini
+  gpio=23=op,dl
+  ```
+- **Explication :**
+  - Configure la broche GPIO 23 en sortie (output) et à l'état bas par défaut (dl = drive low) pour piloter la LED d'éclairage.
+  - Si vous changez la broche dans le script d'automatisation, adaptez ici aussi.
+
+#### 3. Capteur de luminosité
+- **Ligne concernée :**
+  ```ini
+  gpio=27=ip
+  ```
+- **Explication :**
+  - Configure la broche GPIO 27 en entrée pour le capteur de luminosité.
+  - À adapter si vous branchez le capteur sur une autre broche.
+
+### Procédure
+
+1. Ouvrez le fichier `/boot/firmware/config.txt` avec les droits administrateur :
+   ```bash
+   sudo nano /boot/firmware/config.txt
+   ```
+2. Ajoutez ou modifiez le bloc ci-dessus selon vos besoins matériels.
+3. Enregistrez et quittez l'éditeur.
+4. Redémarrez le Raspberry Pi pour que la configuration soit prise en compte :
+   ```bash
+   sudo reboot
+   ```
+
+> **Remarque :**
+> - Si vous utilisez d'autres broches que celles par défaut dans les scripts, pensez à adapter à la fois la configuration dans ce fichier et les options de lancement des scripts (`--gpio`).
+> - Cette configuration est indispensable pour garantir l'accès correct aux GPIO par les scripts Python et shell du projet.
+
 ## Licence
 MIT License
