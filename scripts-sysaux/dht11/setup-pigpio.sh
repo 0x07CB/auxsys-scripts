@@ -174,9 +174,8 @@ while true; do
 done
 
 
-# ############################
 
+echo -e "\033[32;1m[SUCCESS]\033[0m Toutes les étapes se sont déroulées avec succès. Le système est prêt à être utilisé avec pigpio et DHT11."
 
-
-
+# END OF THE SCRIPT
 # ############################
