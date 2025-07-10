@@ -49,21 +49,23 @@ fi
 
 # define array list of packages needed ( to be installed if not installed after this array definition)
 # ############################
-REQUIRED_PACKAGES=('pigpio' 'python3-pigpio' 'python3-pip' 'python3-venv' 'python3')
+REQUIRED_PACKAGES=('pigpiod' 'pigpio' 'libgpio1' 'python3' 'python3-venv' 'python3-pip' 'python3-pigpio')
+MISSING_PACKAGES_LIST=()
 #
 # Iterate over the array and check if each package is installed
 # ############################
 for pkg in "${REQUIRED_PACKAGES[@]}"; do
     if ! apt list --installed 2>/dev/null | grep -E "^${pkg}/" >/dev/null; then
         echo_error_message_with_ansi_colors "Package '$pkg' is not installed."
-        MISSING_PACKAGES=1
+        MISSING_PACKAGES_LIST+=("$pkg")
     else
         echo_info_message_with_ansi_colors "Package '$pkg' is already installed."
     fi
 done
 
-if [ ! -z "$MISSING_PACKAGES" ]; then
-    echo_error_message_with_ansi_colors "One or more required packages are missing. Please install them and re-run this script."
+if [ ${#MISSING_PACKAGES_LIST[@]} -ne 0 ]; then
+    echo_error_message_with_ansi_colors "The following required packages are missing: ${MISSING_PACKAGES_LIST[*]}"
+    echo_error_message_with_ansi_colors "Please install them and re-run this script."
     exit 1
 fi
 
