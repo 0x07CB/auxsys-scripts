@@ -30,6 +30,10 @@
 
 ---
 
+> 📢 **Vous souhaitez contribuer ? Consultez le guide de contribution : [CONTRIBUTING.md](./CONTRIBUTING.md)**
+
+---
+
 # auxsys-scripts
 Rpi3 custom personnals scripts and automations
 
