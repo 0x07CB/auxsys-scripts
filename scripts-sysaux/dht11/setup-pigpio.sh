@@ -135,7 +135,7 @@ fi
 
 for TARGET_USER in "${USERS_TO_ADD[@]}"; do
     if id "$TARGET_USER" &>/dev/null; then
-        if id -nG "$TARGET_USER" | grep -qw gpio; then
+        if ! groups "$TARGET_USER" | grep "gpio"; then
             echo_info_message_with_ansi_colors "L'utilisateur '$TARGET_USER' est déjà membre du groupe gpio."
         else
             usermod -aG gpio "$TARGET_USER"
