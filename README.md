@@ -2,27 +2,31 @@
 
 ---
 
-> ⚠️ **État du projet : version préliminaire / en cours d'amélioration**
+> 🚧 **État du projet : version préliminaire / en cours d'amélioration**
 >
 > Ce dépôt est **fonctionnel** pour les deux principales fonctionnalités :
-> - **Lecture du capteur DHT11** (température & humidité, vocalisation, installation automatisée)
-> - **Veilleuse automatique** (gestion de la luminosité, alertes sonores, service systemd, installation automatisée)
+> - 🌡️ **Lecture du capteur DHT11** (température & humidité, vocalisation, installation automatisée)
+> - 💡 **Veilleuse automatique** (gestion de la luminosité, alertes sonores, service systemd, installation automatisée)
 >
-> **Ce qui est prêt :**
-> - Documentation détaillée (installation, configuration matérielle et logicielle, usage)
-> - Scripts d'installation et de configuration (Python, shell, systemd)
-> - Gestion des dépendances et des groupes système
-> - Assets sonores intégrés
-> - Licence MIT
+> ---
 >
-> **Ce qui reste à améliorer ou à ajouter dans les prochains patchs :**
-> - Finalisation et robustesse de certains scripts shell (ex : gestion d'erreurs, logs, complétion de setup-pigpio.sh)
-> - Ajout de schémas de branchement matériel
-> - Internationalisation (traduction anglaise du README)
-> - Tests sur Raspberry Pi 5 et adaptation si besoin
-> - (Optionnel) Ajout de badges, tests automatisés, roadmap
+> ### ✅ Ce qui est prêt
+> - 📚 Documentation détaillée (installation, configuration matérielle et logicielle, usage)
+> - 🛠️ Scripts d'installation et de configuration (Python, shell, systemd)
+> - 🔗 Gestion des dépendances et des groupes système
+> - 🔊 Assets sonores intégrés
+> - 📄 Licence MIT
 >
-> **Le projet est donc publiquement utilisable, mais il reste en évolution.**
+> ### 📝 Ce qui reste à améliorer ou à ajouter dans les prochains patchs
+> - 🧩 Finalisation et robustesse de certains scripts shell (ex : gestion d'erreurs, logs, complétion de `setup-pigpio.sh`)
+> - 🖼️ Ajout de schémas de branchement matériel
+> - 🌍 Internationalisation (traduction anglaise du README)
+> - 🧪 Tests sur Raspberry Pi 5 et adaptation si besoin
+> - 🏷️ (Optionnel) Ajout de badges, tests automatisés, roadmap
+>
+> ---
+>
+> **ℹ️ Le projet est donc publiquement utilisable, mais il reste en évolution.**
 
 ---
 
