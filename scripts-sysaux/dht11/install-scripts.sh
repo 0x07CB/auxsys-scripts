@@ -118,4 +118,12 @@ else
     echo -e "\033[33;1m[\033[0m\033[33;5mINFO\033[0m\033[33;1m]\033[0m Symlink /usr/local/bin/espeak-dht11-temperature.sh already exists."
 fi
 
+# Installation des dépendances Python (via script dédié)
+SCRIPT_DIR="$(dirname "$0")"
+if [ -f "$SCRIPT_DIR/install-python-deps.sh" ]; then
+    bash "$SCRIPT_DIR/install-python-deps.sh" "$SCRIPT_DIR/requirements.txt"
+else
+    echo -e "\033[33;1m[INFO]\033[0m Script install-python-deps.sh non trouvé, installation des dépendances Python non effectuée."
+fi
+
 
