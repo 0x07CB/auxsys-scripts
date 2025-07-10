@@ -204,11 +204,167 @@ sudo ./install-scripts.sh
   sudo systemctl status light-auto.service
   ```
 
+## Script d'automatisation de la configuration pigpio
+
+Pour simplifier la préparation de votre système et garantir le bon fonctionnement des scripts utilisant les GPIO (notamment DHT11), un script d'automatisation est fourni :
+
+- **setup-pigpio.sh** : Ce script automatise l'installation des paquets nécessaires (pigpio, python3-pigpio, etc.), l'activation et le démarrage du service pigpiod, ainsi que l'ajout de l'utilisateur courant au groupe `gpio` (indispensable pour accéder aux GPIO sans droits root). Il affiche un message `[SUCCESS]` en vert à la fin si tout s'est bien déroulé.
+
+### Utilisation recommandée
+Avant toute utilisation des scripts DHT11 ou light_auto, exécutez :
+```bash
+cd scripts-sysaux/dht11
+sudo ./setup-pigpio.sh
+```
+- Si vous n'êtes pas dans le groupe `gpio`, le script vous y ajoutera automatiquement.
+- Si des paquets sont manquants, ils seront installés.
+- Le service pigpiod sera activé et démarré.
+
+> **Remarque :** Ce script ne modifie pas le fichier `/boot/firmware/config.txt`. Vous devez toujours adapter ce fichier manuellement selon vos branchements matériels (voir section précédente).
+
 ## Dépendances générales
 - Python 3
 - pigpio, gpiozero, RPi.GPIO, pygame
 - espeak-ng, sox
 - Un Raspberry Pi avec accès aux GPIO
+- **Groupe système requis :** L'utilisateur courant doit appartenir au groupe `gpio` (géré automatiquement par `setup-pigpio.sh`).
+
+## Configuration GPIO dans /boot/firmware/config.txt
+
+Pour garantir le bon fonctionnement des scripts d'automatisation (capteur DHT11, capteur de luminosité, éclairage LED), il est nécessaire de configurer les broches GPIO au niveau du système. Depuis les dernières versions de Raspberry Pi OS et distributions similaires, cette configuration se fait dans le fichier `/boot/firmware/config.txt`.
+
+### Où modifier ?
+
+- Le fichier se trouve à l'emplacement : `/boot/firmware/config.txt`
+- Il est accessible depuis le système principal (avec les droits root) ou en montant la carte SD sur un autre ordinateur.
+
+### Bloc de configuration à ajouter ou vérifier
+
+Ajoutez ou vérifiez la présence du bloc suivant à la fin du fichier (après toute configuration existante) :
+
+```ini
+[all]
+# ECLAIRAGE LED
+gpio=23=op,dl
+
+# DHT11 SENSOR
+gpio=4=ip
+
+# capteur de luminosite
+gpio=27=ip
+```
+
+### Détail par fonctionnalité
+
+#### 1. Capteur DHT11 (Température & Humidité)
+- **Ligne concernée :**
+  ```ini
+  gpio=4=ip
+  ```
+- **Explication :**
+  - Configure la broche GPIO 4 en entrée (input) pour le capteur DHT11.
+  - Si vous utilisez une autre broche (option `--gpio` dans les scripts), adaptez le numéro ici.
+
+#### 2. Éclairage automatique (LED)
+- **Ligne concernée :**
+  ```ini
+  gpio=23=op,dl
+  ```
+- **Explication :**
+  - Configure la broche GPIO 23 en sortie (output) et à l'état bas par défaut (dl = drive low) pour piloter la LED d'éclairage.
+  - Si vous changez la broche dans le script d'automatisation, adaptez ici aussi.
+
+#### 3. Capteur de luminosité
+- **Ligne concernée :**
+  ```ini
+  gpio=27=ip
+  ```
+- **Explication :**
+  - Configure la broche GPIO 27 en entrée pour le capteur de luminosité.
+  - À adapter si vous branchez le capteur sur une autre broche.
+
+### Procédure
+
+1. Ouvrez le fichier `/boot/firmware/config.txt` avec les droits administrateur :
+   ```bash
+   sudo nano /boot/firmware/config.txt
+   ```
+2. Ajoutez ou modifiez le bloc ci-dessus selon vos besoins matériels.
+3. Enregistrez et quittez l'éditeur.
+4. Redémarrez le Raspberry Pi pour que la configuration soit prise en compte :
+   ```bash
+   sudo reboot
+   ```
+
+> **Remarque :**
+> - Si vous utilisez d'autres broches que celles par défaut dans les scripts, pensez à adapter à la fois la configuration dans ce fichier et les options de lancement des scripts (`--gpio`).
+> - Cette configuration est indispensable pour garantir l'accès correct aux GPIO par les scripts Python et shell du projet.
+
+## Activation et configuration du serveur Remote GPIO (pigpiod)
+
+Pour contrôler les GPIO du Raspberry Pi à distance (depuis un autre Pi ou un PC), suivez ces étapes :
+
+### 1. Installer pigpio et activer le service pigpiod
+
+```bash
+sudo apt update
+sudo apt install pigpio python3-pigpio
+```
+
+### 2. Activer le service pigpiod au démarrage
+
+```bash
+sudo systemctl enable pigpiod
+sudo systemctl start pigpiod
+```
+
+- Vérifiez que le service est actif :
+  ```bash
+  sudo systemctl status pigpiod
+  ```
+
+### 3. (Optionnel) Lancer pigpiod manuellement avec des options réseau
+
+Pour autoriser uniquement certaines adresses IP à accéder à distance :
+```bash
+sudo pigpiod -n 192.168.1.42
+```
+(adaptez l’IP à celle de votre contrôleur distant)
+
+### 4. Activer le Remote GPIO via raspi-config
+
+```bash
+sudo raspi-config
+```
+- Menu : Interface Options → Remote GPIO → Enable
+
+### 5. Sur la machine de contrôle (PC ou autre Pi)
+
+- Installez les bibliothèques nécessaires :
+  ```bash
+  sudo apt install python3-gpiozero python3-pigpio
+  ```
+  ou via pip :
+  ```bash
+  pip3 install gpiozero pigpio
+  ```
+
+### 6. Utilisation à distance dans vos scripts Python
+
+- Soit en passant l’IP via une variable d’environnement :
+  ```bash
+  PIGPIO_ADDR=192.168.1.42 python3 mon_script.py
+  ```
+- Soit en forçant la pin factory dans le code :
+  ```python
+  from gpiozero import LED
+  from gpiozero.pins.pigpio import PiGPIOFactory
+
+  factory = PiGPIOFactory(host='192.168.1.42')
+  led = LED(17, pin_factory=factory)
+  ```
+
+> **Remarque** : Pour utiliser GPIO Zero à distance, le démon pigpiod doit être actif sur le Raspberry Pi cible, et le port 8888 doit être ouvert sur le réseau.
 
 ## Licence
 MIT License
