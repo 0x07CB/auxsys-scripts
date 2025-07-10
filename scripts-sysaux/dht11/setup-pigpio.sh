@@ -49,7 +49,7 @@ fi
 
 # define array list of packages needed ( to be installed if not installed after this array definition)
 # ############################
-REQUIRED_PACKAGES=('pigpiod' 'pigpio' 'libgpio1' 'python3' 'python3-venv' 'python3-pip' 'python3-pigpio')
+REQUIRED_PACKAGES=('pigpiod' 'pigpio' 'libpigpio1' 'python3' 'python3-venv' 'python3-pip' 'python3-pigpio')
 MISSING_PACKAGES_LIST=()
 #
 # Iterate over the array and check if each package is installed
@@ -64,9 +64,22 @@ for pkg in "${REQUIRED_PACKAGES[@]}"; do
 done
 
 if [ ${#MISSING_PACKAGES_LIST[@]} -ne 0 ]; then
-    echo_error_message_with_ansi_colors "The following required packages are missing: ${MISSING_PACKAGES_LIST[*]}"
-    echo_error_message_with_ansi_colors "Please install them and re-run this script."
-    exit 1
+    echo_error_message_with_ansi_colors "Les paquets suivants sont manquants : ${MISSING_PACKAGES_LIST[*]}"
+    echo -e "\033[33;1mVoulez-vous que le script tente de les installer automatiquement ? (o/n)\033[0m"
+    read -r USER_CHOICE
+    if [[ "$USER_CHOICE" =~ ^[oOyY]$ ]]; then
+        apt update
+        apt install -y "${MISSING_PACKAGES_LIST[@]}"
+        if [ $? -eq 0 ]; then
+            echo_info_message_with_ansi_colors "Installation réussie des paquets manquants."
+        else
+            echo_error_message_with_ansi_colors "L'installation automatique a échoué. Veuillez installer les paquets manuellement."
+            exit 1
+        fi
+    else
+        echo_error_message_with_ansi_colors "Veuillez installer les paquets manquants puis relancer le script."
+        exit 1
+    fi
 fi
 
 # ############################
