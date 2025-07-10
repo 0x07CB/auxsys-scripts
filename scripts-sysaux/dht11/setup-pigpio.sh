@@ -135,9 +135,11 @@ fi
 
 for TARGET_USER in "${USERS_TO_ADD[@]}"; do
     if id "$TARGET_USER" &>/dev/null; then
-        if ! groups "$TARGET_USER" | grep "gpio"; then
+        if groups "$TARGET_USER" | grep -qw "gpio"; then
             echo_info_message_with_ansi_colors "L'utilisateur '$TARGET_USER' est déjà membre du groupe gpio."
         else
+            echo_info_message_with_ansi_colors "L'utilisateur '$TARGET_USER' n'est pas membre du groupe gpio."
+            echo_info_message_with_ansi_colors "Ajout de '$TARGET_USER' au groupe gpio..."
             usermod -aG gpio "$TARGET_USER"
             if [ $? -eq 0 ]; then
                 echo_info_message_with_ansi_colors "Ajout de '$TARGET_USER' au groupe gpio réussi. (Déconnexion/reconnexion nécessaire pour prise en compte)"
@@ -147,6 +149,7 @@ for TARGET_USER in "${USERS_TO_ADD[@]}"; do
         fi
     else
         echo_error_message_with_ansi_colors "L'utilisateur '$TARGET_USER' n'existe pas."
+        echo_error_message_with_ansi_colors "Veuillez vérifier le nom d'utilisateur et réessayer."
     fi
     sleep 0.2
 done
