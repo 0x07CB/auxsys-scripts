@@ -113,46 +113,65 @@ fi
 
 
 
-# Ajout d'utilisateurs au groupe gpio pour l'accès aux GPIO sans sudo
-# ---------------------------------------------------------------
-echo -e "\033[33;1mVeuillez indiquer le ou les utilisateurs à ajouter au groupe 'gpio' (séparés par des espaces ou des virgules).\033[0m"
-echo -e "\033[33;1mLaissez vide pour ajouter uniquement l'utilisateur courant : $SUDO_USER (ou $USER si non lancé avec sudo).\033[0m"
-read -r USER_INPUT
+# Fonction pour ajouter des utilisateurs au groupe gpio avec gestion des erreurs et possibilité de réessayer
+function add_users_to_gpio_group() {
+    while true; do
+        echo -e "\033[33;1mVeuillez indiquer le ou les utilisateurs à ajouter au groupe 'gpio' (séparés par des espaces ou des virgules).\033[0m"
+        echo -e "\033[33;1mLaissez vide pour ajouter uniquement l'utilisateur courant : $SUDO_USER (ou $USER si non lancé avec sudo).\033[0m"
+        read -r USER_INPUT
 
-# Détermination de la liste d'utilisateurs à ajouter
-if [ -z "$USER_INPUT" ]; then
-    # Si le script est lancé avec sudo, on prend $SUDO_USER, sinon $USER
-    if [ -n "$SUDO_USER" ]; then
-        USERS_TO_ADD=("$SUDO_USER")
-    else
-        USERS_TO_ADD=("$USER")
-    fi
-else
-    # Découpage sur espace ou virgule
-    USER_INPUT_CLEANED=$(echo "$USER_INPUT" | tr ',' ' ')
-    USERS_TO_ADD=($USER_INPUT_CLEANED)
-fi
-
-for TARGET_USER in "${USERS_TO_ADD[@]}"; do
-    if id "$TARGET_USER" &>/dev/null; then
-        if groups "$TARGET_USER" | grep -qw "gpio"; then
-            echo_info_message_with_ansi_colors "L'utilisateur '$TARGET_USER' est déjà membre du groupe gpio."
-        else
-            echo_info_message_with_ansi_colors "L'utilisateur '$TARGET_USER' n'est pas membre du groupe gpio."
-            echo_info_message_with_ansi_colors "Ajout de '$TARGET_USER' au groupe gpio..."
-            usermod -aG gpio "$TARGET_USER"
-            if [ $? -eq 0 ]; then
-                echo_info_message_with_ansi_colors "Ajout de '$TARGET_USER' au groupe gpio réussi. (Déconnexion/reconnexion nécessaire pour prise en compte)"
+        # Détermination de la liste d'utilisateurs à ajouter
+        if [ -z "$USER_INPUT" ]; then
+            if [ -n "$SUDO_USER" ]; then
+                USERS_TO_ADD=("$SUDO_USER")
             else
-                echo_error_message_with_ansi_colors "Échec de l'ajout de '$TARGET_USER' au groupe gpio."
+                USERS_TO_ADD=("$USER")
+            fi
+        else
+            USER_INPUT_CLEANED=$(echo "$USER_INPUT" | tr ',' ' ')
+            USERS_TO_ADD=($USER_INPUT_CLEANED)
+        fi
+
+        ALL_USERS_VALID=true
+
+        for TARGET_USER in "${USERS_TO_ADD[@]}"; do
+            if id "$TARGET_USER" &>/dev/null; then
+                if groups "$TARGET_USER" | grep -qw "gpio"; then
+                    echo_info_message_with_ansi_colors "L'utilisateur '$TARGET_USER' est déjà membre du groupe gpio."
+                else
+                    echo_info_message_with_ansi_colors "L'utilisateur '$TARGET_USER' n'est pas membre du groupe gpio."
+                    echo_info_message_with_ansi_colors "Ajout de '$TARGET_USER' au groupe gpio..."
+                    usermod -aG gpio "$TARGET_USER"
+                    if [ $? -eq 0 ]; then
+                        echo_info_message_with_ansi_colors "Ajout de '$TARGET_USER' au groupe gpio réussi. (Déconnexion/reconnexion nécessaire pour prise en compte)"
+                    else
+                        echo_error_message_with_ansi_colors "Échec de l'ajout de '$TARGET_USER' au groupe gpio."
+                        ALL_USERS_VALID=false
+                    fi
+                fi
+            else
+                echo_error_message_with_ansi_colors "L'utilisateur '$TARGET_USER' n'existe pas."
+                echo_error_message_with_ansi_colors "Veuillez vérifier le nom d'utilisateur et réessayer."
+                ALL_USERS_VALID=false
+            fi
+            sleep 0.2
+        done
+
+        if $ALL_USERS_VALID; then
+            break
+        else
+            echo -e "\033[33;1mVoulez-vous réessayer d'ajouter les utilisateurs ? (o/n)\033[0m"
+            read -r RETRY_CHOICE
+            if ! [[ "$RETRY_CHOICE" =~ ^[oOyY]$ ]]; then
+                echo_info_message_with_ansi_colors "Abandon de l'ajout d'utilisateurs au groupe gpio."
+                break
             fi
         fi
-    else
-        echo_error_message_with_ansi_colors "L'utilisateur '$TARGET_USER' n'existe pas."
-        echo_error_message_with_ansi_colors "Veuillez vérifier le nom d'utilisateur et réessayer."
-    fi
-    sleep 0.2
-done
+    done
+}
+
+# Appel de la fonction
+add_users_to_gpio_group
 
 # ############################
 
