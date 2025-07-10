@@ -44,6 +44,51 @@ sudo ./install-scripts.sh
   ```bash
   dht11.py --humidity
   ```
+- Pour lire température et humidité (par défaut si aucune option n’est précisée) :
+  ```bash
+  dht11.py
+  ```
+- Pour afficher la température en Fahrenheit :
+  ```bash
+  dht11.py --temperature --fahrenheit
+  ```
+- Pour personnaliser le symbole d’unité (exemple pour Celsius) :
+  ```bash
+  dht11.py --temperature --custom-celsius-unit="Degrés Celsius"
+  ```
+- Pour personnaliser le symbole d’unité pour Fahrenheit :
+  ```bash
+  dht11.py --temperature --fahrenheit --custom-fahrenheit-unit="Degrés Fahrenheit"
+  ```
+- Pour personnaliser le symbole d’unité pour l’humidité :
+  ```bash
+  dht11.py --humidity --custom-humidity-unit="Pourcents"
+  ```
+- Pour personnaliser le préfixe d’affichage :
+  ```bash
+  dht11.py --temperature --prefix-temperature="La température est de"
+  dht11.py --humidity --prefix-humidity="Le taux d\'humidité est de"
+  ```
+- Pour utiliser la sortie standard (stdout) (par défaut) :
+  ```bash
+  dht11.py --temperature --use-stdout
+  ```
+- Pour supprimer le retour à la ligne à la fin de la sortie (utile pour l’intégration dans d’autres scripts) :
+  ```bash
+  dht11.py --temperature --no-line-return
+  ```
+- Pour spécifier la broche GPIO utilisée :
+  ```bash
+  dht11.py --gpio 17
+  ```
+- Pour spécifier l’adresse IP et le port du démon pigpio (par défaut : 127.0.0.1:8888) :
+  ```bash
+  dht11.py --host 192.168.1.10 --port 8888
+  ```
+- Pour afficher la version du script :
+  ```bash
+  dht11.py --version
+  ```
 - Pour vocaliser la température :
   ```bash
   espeak-dht11-temperature.sh
@@ -52,6 +97,25 @@ sudo ./install-scripts.sh
   ```bash
   espeak-dht11-humidity.sh
   ```
+
+#### Résumé des options disponibles
+
+| Option                        | Description                                                      | Valeur par défaut      |
+|-------------------------------|------------------------------------------------------------------|------------------------|
+| `--gpio`                      | Numéro de la broche GPIO                                         | 4                      |
+| `--host`                      | Adresse IP du démon pigpio                                       | 127.0.0.1              |
+| `--port`                      | Port du démon pigpio                                             | 8888                   |
+| `--humidity`                  | Afficher l’humidité                                              | -                      |
+| `--temperature`               | Afficher la température                                          | -                      |
+| `--fahrenheit`                | Convertir la température en Fahrenheit                           | -                      |
+| `--use-stdout`                | Utiliser la sortie standard                                      | True                   |
+| `--no-line-return`            | Ne pas ajouter de retour à la ligne                              | False                  |
+| `--custom-celsius-unit`       | Symbole de l’unité Celsius                                       | °C                     |
+| `--custom-fahrenheit-unit`    | Symbole de l’unité Fahrenheit                                    | °F                     |
+| `--custom-humidity-unit`      | Symbole de l’unité d’humidité                                    | %                      |
+| `--prefix-temperature`        | Préfixe pour l’affichage de la température                       | "temperature: "        |
+| `--prefix-humidity`           | Préfixe pour l’affichage de l’humidité                           | "humidity: "           |
+| `--version`                   | Afficher la version du script                                    | -                      |
 
 ## 2. light_auto : Veilleuse automatique selon la luminosité
 
