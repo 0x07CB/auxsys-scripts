@@ -113,6 +113,44 @@ fi
 
 
 
+# Ajout d'utilisateurs au groupe gpio pour l'accès aux GPIO sans sudo
+# ---------------------------------------------------------------
+echo -e "\033[33;1mVeuillez indiquer le ou les utilisateurs à ajouter au groupe 'gpio' (séparés par des espaces ou des virgules).\033[0m"
+echo -e "\033[33;1mLaissez vide pour ajouter uniquement l'utilisateur courant : $SUDO_USER (ou $USER si non lancé avec sudo).\033[0m"
+read -r USER_INPUT
+
+# Détermination de la liste d'utilisateurs à ajouter
+if [ -z "$USER_INPUT" ]; then
+    # Si le script est lancé avec sudo, on prend $SUDO_USER, sinon $USER
+    if [ -n "$SUDO_USER" ]; then
+        USERS_TO_ADD=("$SUDO_USER")
+    else
+        USERS_TO_ADD=("$USER")
+    fi
+else
+    # Découpage sur espace ou virgule
+    USER_INPUT_CLEANED=$(echo "$USER_INPUT" | tr ',' ' ')
+    USERS_TO_ADD=($USER_INPUT_CLEANED)
+fi
+
+for TARGET_USER in "${USERS_TO_ADD[@]}"; do
+    if id "$TARGET_USER" &>/dev/null; then
+        if id -nG "$TARGET_USER" | grep -qw gpio; then
+            echo_info_message_with_ansi_colors "L'utilisateur '$TARGET_USER' est déjà membre du groupe gpio."
+        else
+            usermod -aG gpio "$TARGET_USER"
+            if [ $? -eq 0 ]; then
+                echo_info_message_with_ansi_colors "Ajout de '$TARGET_USER' au groupe gpio réussi. (Déconnexion/reconnexion nécessaire pour prise en compte)"
+            else
+                echo_error_message_with_ansi_colors "Échec de l'ajout de '$TARGET_USER' au groupe gpio."
+            fi
+        fi
+    else
+        echo_error_message_with_ansi_colors "L'utilisateur '$TARGET_USER' n'existe pas."
+    fi
+    sleep 0.2
+done
+
 # ############################
 
 
