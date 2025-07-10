@@ -281,5 +281,71 @@ gpio=27=ip
 > - Si vous utilisez d'autres broches que celles par défaut dans les scripts, pensez à adapter à la fois la configuration dans ce fichier et les options de lancement des scripts (`--gpio`).
 > - Cette configuration est indispensable pour garantir l'accès correct aux GPIO par les scripts Python et shell du projet.
 
+## Activation et configuration du serveur Remote GPIO (pigpiod)
+
+Pour contrôler les GPIO du Raspberry Pi à distance (depuis un autre Pi ou un PC), suivez ces étapes :
+
+### 1. Installer pigpio et activer le service pigpiod
+
+```bash
+sudo apt update
+sudo apt install pigpio python3-pigpio
+```
+
+### 2. Activer le service pigpiod au démarrage
+
+```bash
+sudo systemctl enable pigpiod
+sudo systemctl start pigpiod
+```
+
+- Vérifiez que le service est actif :
+  ```bash
+  sudo systemctl status pigpiod
+  ```
+
+### 3. (Optionnel) Lancer pigpiod manuellement avec des options réseau
+
+Pour autoriser uniquement certaines adresses IP à accéder à distance :
+```bash
+sudo pigpiod -n 192.168.1.42
+```
+(adaptez l’IP à celle de votre contrôleur distant)
+
+### 4. Activer le Remote GPIO via raspi-config
+
+```bash
+sudo raspi-config
+```
+- Menu : Interface Options → Remote GPIO → Enable
+
+### 5. Sur la machine de contrôle (PC ou autre Pi)
+
+- Installez les bibliothèques nécessaires :
+  ```bash
+  sudo apt install python3-gpiozero python3-pigpio
+  ```
+  ou via pip :
+  ```bash
+  pip3 install gpiozero pigpio
+  ```
+
+### 6. Utilisation à distance dans vos scripts Python
+
+- Soit en passant l’IP via une variable d’environnement :
+  ```bash
+  PIGPIO_ADDR=192.168.1.42 python3 mon_script.py
+  ```
+- Soit en forçant la pin factory dans le code :
+  ```python
+  from gpiozero import LED
+  from gpiozero.pins.pigpio import PiGPIOFactory
+
+  factory = PiGPIOFactory(host='192.168.1.42')
+  led = LED(17, pin_factory=factory)
+  ```
+
+> **Remarque** : Pour utiliser GPIO Zero à distance, le démon pigpiod doit être actif sur le Raspberry Pi cible, et le port 8888 doit être ouvert sur le réseau.
+
 ## Licence
 MIT License
