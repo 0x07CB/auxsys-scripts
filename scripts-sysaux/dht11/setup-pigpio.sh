@@ -80,7 +80,38 @@ if [ ${#MISSING_PACKAGES_LIST[@]} -ne 0 ]; then
     fi
 fi
 
+# Enable and start the pigpiod service
 # ############################
+# Enable the pigpiod service to start at boot
+if ! systemctl is-enabled pigpiod >/dev/null 2>&1; then
+    echo_info_message_with_ansi_colors "Enabling pigpiod service..."
+    systemctl enable pigpiod
+    if [ $? -ne 0 ]; then
+        echo_error_message_with_ansi_colors "Failed to enable pigpiod service."
+        exit 1
+    fi
+else
+    echo_info_message_with_ansi_colors "pigpiod service is already enabled."
+fi
+
+# Start the pigpiod service or restart it if it's already running
+if systemctl is-active --quiet pigpiod; then
+    echo_info_message_with_ansi_colors "Restarting pigpiod service..."
+    systemctl restart pigpiod
+    if [ $? -ne 0 ]; then
+        echo_error_message_with_ansi_colors "Failed to restart pigpiod service."
+        exit 1
+    fi
+else
+    echo_info_message_with_ansi_colors "Starting pigpiod service..."
+    systemctl start pigpiod
+    if [ $? -ne 0 ]; then
+        echo_error_message_with_ansi_colors "Failed to start pigpiod service."
+        exit 1
+    fi
+fi
+
+
 
 # ############################
 
