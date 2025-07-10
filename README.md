@@ -10,6 +10,7 @@ scripts-sysaux/
 │   ├── espeak-dht11-humidity.sh
 │   ├── espeak-dht11-temperature.sh
 │   ├── install-scripts.sh
+│   ├── install-python-deps.sh
 │   └── requirements.txt
 ├── light_auto/
 │   ├── install-scripts.sh
@@ -27,6 +28,7 @@ scripts-sysaux/
 - **dht.py** : Script Python pour lire les données du capteur DHT11 via pigpio.
 - **espeak-dht11-humidity.sh** / **espeak-dht11-temperature.sh** : Scripts shell pour vocaliser la température ou l'humidité via espeak-ng.
 - **install-scripts.sh** : Installe les scripts, dépendances et crée les liens symboliques nécessaires.
+- **install-python-deps.sh** : Installe les dépendances Python avec options d'installation interactive.
 - **requirements.txt** : Dépendances Python nécessaires (pigpio, gpiozero, etc).
 
 ### Installation (dht11)
@@ -34,6 +36,70 @@ scripts-sysaux/
 cd scripts-sysaux/dht11
 sudo ./install-scripts.sh
 ```
+
+### Installation des dépendances Python (DHT11)
+
+Le script `install-python-deps.sh` vous propose plusieurs modes d'installation :
+- **venv local** : crée un environnement virtuel Python dans le dossier courant.
+- **utilisateur courant** : installe les paquets pour l'utilisateur actuel.
+- **autre utilisateur** : installe pour un utilisateur système spécifique.
+
+Lancez :
+```bash
+cd scripts-sysaux/dht11
+./install-python-deps.sh
+```
+et suivez les instructions.
+
+> **Note** : L'installation complète (`install-scripts.sh`) gère aussi la copie des scripts, la création des liens symboliques, et l'ajout au groupe `audio` si besoin.
+
+### Mise à jour des scripts
+
+Pour mettre à jour les scripts, relancez simplement le script d'installation :
+```bash
+sudo ./install-scripts.sh
+```
+Les anciens fichiers sont sauvegardés avec l'extension `.bak` si besoin.
+
+### Instructions pour connecter le capteur DHT11
+
+Le capteur DHT11 possède trois broches principales :
+- **VCC** : à connecter à une source d'alimentation 5V ou 3.3V sur le Raspberry Pi.
+- **DATA** : à connecter à une broche GPIO du Raspberry Pi (par défaut GPIO 4).
+- **GND** : à connecter à une broche de masse (GND) sur le Raspberry Pi.
+
+#### Étapes pour connecter le capteur DHT11 :
+1. Identifiez les broches du capteur DHT11 (VCC, DATA, GND).
+2. Connectez la broche **VCC** à une broche d'alimentation 5V ou 3.3V du Raspberry Pi.
+3. Connectez la broche **DATA** à la broche GPIO 4 (ou une autre broche GPIO compatible, voir encadré ci-dessous).
+4. Connectez la broche **GND** à une broche de masse (GND) du Raspberry Pi.
+5. Assurez-vous que le démon pigpio est actif sur le Raspberry Pi :
+   ```bash
+   sudo pigpiod
+   ```
+6. Testez la connexion en exécutant le script :
+   ```bash
+   dht11.py --temperature --humidity
+   ```
+
+> **Important : Choix de la broche GPIO**
+>
+> - Le DHT11 peut être connecté à n'importe quelle broche GPIO numérique du Raspberry Pi (modèles 2, 3, 4), à condition qu'elle ne soit pas déjà utilisée par un autre périphérique ou une fonction spéciale (I2C, SPI, UART, etc.).
+> - Par convention, la broche GPIO 4 (numérotation BCM) est souvent utilisée, mais ce n'est pas une obligation.
+> - **Numérotation recommandée :** Toutes les instructions et scripts de ce projet utilisent la numérotation BCM (Broadcom), qui est la plus courante dans la documentation Raspberry Pi et dans les bibliothèques Python (pigpio, gpiozero, etc.).
+> - **À éviter :** N'utilisez pas les broches réservées à l'alimentation (5V/3.3V), à la masse (GND), ni les broches déjà utilisées pour I2C (GPIO 2/3), UART (GPIO 14/15), SPI (GPIO 10/9/11), sauf si vous savez ce que vous faites.
+> - **Exemples de GPIO compatibles (numérotation BCM) :**
+>   - GPIO 4 (par défaut)
+>   - GPIO 17
+>   - GPIO 18
+>   - GPIO 27
+>   - GPIO 22
+>   - GPIO 23
+>   - GPIO 24
+>   - GPIO 25
+> - **Astuce :** Pour éviter toute confusion, vérifiez toujours que vous utilisez la numérotation BCM (et non la numérotation physique BOARD) dans vos scripts et branchements. La plupart des bibliothèques Python utilisent BCM par défaut.
+
+> **Note** : Ce script est compatible avec les Raspberry Pi 2, 3 et 4. Il n'a pas encore été testé sur le Raspberry Pi 5, mais une adaptation est prévue pour cette plateforme dans le futur.
 
 ### Utilisation
 - Pour lire la température :
