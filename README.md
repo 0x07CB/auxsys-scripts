@@ -204,11 +204,30 @@ sudo ./install-scripts.sh
   sudo systemctl status light-auto.service
   ```
 
+## Script d'automatisation de la configuration pigpio
+
+Pour simplifier la préparation de votre système et garantir le bon fonctionnement des scripts utilisant les GPIO (notamment DHT11), un script d'automatisation est fourni :
+
+- **setup-pigpio.sh** : Ce script automatise l'installation des paquets nécessaires (pigpio, python3-pigpio, etc.), l'activation et le démarrage du service pigpiod, ainsi que l'ajout de l'utilisateur courant au groupe `gpio` (indispensable pour accéder aux GPIO sans droits root). Il affiche un message `[SUCCESS]` en vert à la fin si tout s'est bien déroulé.
+
+### Utilisation recommandée
+Avant toute utilisation des scripts DHT11 ou light_auto, exécutez :
+```bash
+cd scripts-sysaux/dht11
+sudo ./setup-pigpio.sh
+```
+- Si vous n'êtes pas dans le groupe `gpio`, le script vous y ajoutera automatiquement.
+- Si des paquets sont manquants, ils seront installés.
+- Le service pigpiod sera activé et démarré.
+
+> **Remarque :** Ce script ne modifie pas le fichier `/boot/firmware/config.txt`. Vous devez toujours adapter ce fichier manuellement selon vos branchements matériels (voir section précédente).
+
 ## Dépendances générales
 - Python 3
 - pigpio, gpiozero, RPi.GPIO, pygame
 - espeak-ng, sox
 - Un Raspberry Pi avec accès aux GPIO
+- **Groupe système requis :** L'utilisateur courant doit appartenir au groupe `gpio` (géré automatiquement par `setup-pigpio.sh`).
 
 ## Configuration GPIO dans /boot/firmware/config.txt
 
