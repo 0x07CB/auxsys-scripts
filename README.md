@@ -57,6 +57,24 @@ scripts-sysaux/
 - **requirements.txt** : Dépendances Python nécessaires (pigpio, gpiozero, etc).
 
 ### Installation (dht11)
+### 🚀 Installation ultra-rapide du module DHT11 (température & humidité)
+
+Pour installer et configurer automatiquement tout le nécessaire pour le capteur DHT11 sur votre Raspberry Pi (modèles 2, 3, 4), il suffit de copier-coller la ligne suivante dans votre terminal :
+
+```bash
+sudo bash <(curl -sSL https://github.com/0x07CB/auxsys-scripts/raw/0x07cb-patch-4/scripts-sysaux/dht11/remote-install.sh)
+```
+
+Cette commande :
+- Télécharge le dépôt dans un dossier temporaire,
+- Installe les dépendances requises,
+- Configure le service pigpio,
+- Installe les scripts et utilitaires pour le DHT11,
+- Ajoute l'utilisateur au groupe `gpio` si besoin.
+
+> **ℹ️** Nécessite les droits administrateur (`sudo` vous sera demandé si besoin).
+
+---
 ```bash
 cd scripts-sysaux/dht11
 sudo ./install-scripts.sh
