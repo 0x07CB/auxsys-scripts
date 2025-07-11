@@ -10,7 +10,6 @@
 >
 > ---
 >
-> ### ✅ Ce qui est prêt
 > - 📚 Documentation détaillée (installation, configuration matérielle et logicielle, usage)
 > - 🛠️ Scripts d'installation et de configuration (Python, shell, systemd)
 > - 🔗 Gestion des dépendances et des groupes système
@@ -20,11 +19,6 @@
 > ### 📝 Ce qui reste à améliorer ou à ajouter dans les prochains patchs
 > - 🧩 Finalisation et robustesse de certains scripts shell (ex : gestion d'erreurs, logs, complétion de `setup-pigpio.sh`)
 > - 🖼️ Ajout de schémas de branchement matériel
-> - 🌍 Internationalisation (traduction anglaise du README)
-> - 🧪 Tests sur Raspberry Pi 5 et adaptation si besoin
-> - 🏷️ (Optionnel) Ajout de badges, tests automatisés, roadmap
->
-> ---
 >
 > **ℹ️ Le projet est donc publiquement utilisable, mais il reste en évolution.**
 
@@ -35,15 +29,10 @@
 ---
 
 # auxsys-scripts
-Rpi3 custom personnals scripts and automations
-
-## Structure du projet
-
 ```
 scripts-sysaux/
 ├── dht11/
 │   ├── dht.py
-│   ├── espeak-dht11-humidity.sh
 │   ├── espeak-dht11-temperature.sh
 │   ├── install-scripts.sh
 │   ├── install-python-deps.sh
@@ -68,6 +57,24 @@ scripts-sysaux/
 - **requirements.txt** : Dépendances Python nécessaires (pigpio, gpiozero, etc).
 
 ### Installation (dht11)
+### 🚀 Installation ultra-rapide du module DHT11 (température & humidité)
+
+Pour installer et configurer automatiquement tout le nécessaire pour le capteur DHT11 sur votre Raspberry Pi (modèles 2, 3, 4), il suffit de copier-coller la ligne suivante dans votre terminal :
+
+```bash
+sudo bash <(curl -sSL https://github.com/0x07CB/auxsys-scripts/raw/0x07cb-patch-4/scripts-sysaux/dht11/remote-install.sh)
+```
+
+Cette commande :
+- Télécharge le dépôt dans un dossier temporaire,
+- Installe les dépendances requises,
+- Configure le service pigpio,
+- Installe les scripts et utilitaires pour le DHT11,
+- Ajoute l'utilisateur au groupe `gpio` si besoin.
+
+> **ℹ️** Nécessite les droits administrateur (`sudo` vous sera demandé si besoin).
+
+---
 ```bash
 cd scripts-sysaux/dht11
 sudo ./install-scripts.sh
