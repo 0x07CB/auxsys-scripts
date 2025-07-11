@@ -72,7 +72,7 @@ Cette commande :
 - Installe les scripts et utilitaires pour le DHT11,
 - Ajoute l'utilisateur au groupe `gpio` si besoin.
 
-> **ℹ️** Nécessite les droits administrateur (`sudo` vous sera demandé si besoin).
+> **ℹ️** Si le service Remote GPIO échoue à démarrer correctement après l'installation, il suffit de redémarrer l'appareil pour que tout fonctionne normalement avec la configuration et les scripts mis à jour.
 
 ---
 ```bash
