@@ -29,6 +29,7 @@
 ---
 
 # auxsys-scripts
+```
 scripts-sysaux/
 ├── dht11/
 │   ├── dht.py
