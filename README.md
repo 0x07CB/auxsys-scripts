@@ -62,7 +62,7 @@ scripts-sysaux/
 Pour installer et configurer automatiquement tout le nécessaire pour le capteur DHT11 sur votre Raspberry Pi (modèles 2, 3, 4), il suffit de copier-coller la ligne suivante dans votre terminal :
 
 ```bash
-sudo bash <(curl -sSL https://github.com/0x07CB/auxsys-scripts/raw/0x07cb-patch-4/scripts-sysaux/dht11/remote-install.sh)
+sudo bash -c 'tmpdir=$(mktemp -d) && git clone --depth=1 https://github.com/0x07CB/auxsys-scripts.git "$tmpdir" && bash "$tmpdir/scripts-sysaux/dht11/remote-install.sh" && rm -rf "$tmpdir"'
 ```
 
 Cette commande :
@@ -72,7 +72,7 @@ Cette commande :
 - Installe les scripts et utilitaires pour le DHT11,
 - Ajoute l'utilisateur au groupe `gpio` si besoin.
 
-> **ℹ️** Nécessite les droits administrateur (`sudo` vous sera demandé si besoin).
+> **Information** : Si le service Remote GPIO échoue à démarrer correctement après l'installation, il suffit de redémarrer l'appareil pour que tout fonctionne normalement avec la configuration et les scripts mis à jour.
 
 ---
 ```bash
