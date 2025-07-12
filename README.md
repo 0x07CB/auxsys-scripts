@@ -234,11 +234,43 @@ Le capteur DHT11 possède trois broches principales :
 - **sounds/** : Sons d'alerte joués lors des changements d'état.
 - **requirements.txt** : Dépendances Python nécessaires (pygame, RPi.GPIO).
 
+### 🚀 Installation ultra-rapide du module light_auto (veilleuse)
+
+Pour installer et configurer automatiquement tout le nécessaire pour la veilleuse automatique sur votre Raspberry Pi (modèles 2, 3, 4), il suffit de copier-coller la ligne suivante dans votre terminal :
+
+```bash
+sudo bash -c 'tmpdir=$(mktemp -d) && git clone --depth=1 https://github.com/0x07CB/auxsys-scripts.git "$tmpdir" && bash "$tmpdir/scripts-sysaux/light_auto/install-scripts.sh" && rm -rf "$tmpdir"'
+```
+
+Cette commande :
+- Télécharge le dépôt dans un dossier temporaire,
+- Installe les dépendances requises,
+- Configure le service systemd,
+- Installe les scripts et utilitaires pour la veilleuse,
+- Crée l'utilisateur et ajoute aux groupes nécessaires (`gpio`, `audio`),
+- Nettoie le dossier temporaire à la fin.
+
 ### Installation (light_auto)
 ```bash
 cd scripts-sysaux/light_auto
 sudo ./install-scripts.sh
 ```
+
+### Installation des dépendances Python (light_auto)
+
+Le script `install-python-deps.sh` est appelé automatiquement à la fin de l'installation, mais vous pouvez aussi le lancer manuellement pour choisir le mode d'installation :
+- **venv local** : crée un environnement virtuel Python dans le dossier courant.
+- **utilisateur courant** : installe les paquets pour l'utilisateur actuel.
+- **autre utilisateur** : installe pour un utilisateur système spécifique.
+
+Lancez :
+```bash
+cd scripts-sysaux/light_auto
+./install-python-deps.sh
+```
+et suivez les instructions.
+
+> **Note** : L'installation complète (`install-scripts.sh`) gère aussi la copie des scripts, la création des dossiers, et l'ajout au groupe `audio` si besoin.
 
 ### Utilisation
 - Le service `light-auto` peut être activé/désactivé via systemd :

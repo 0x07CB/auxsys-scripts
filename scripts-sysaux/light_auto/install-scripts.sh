@@ -96,3 +96,11 @@ sudo chown -R gpiouser:gpiouser /opt/light_auto \
     && sudo chmod -R 755 /opt/light_auto \
     && sudo chmod +x /opt/light_auto/light_auto.py
 
+# Installation des dépendances Python (via script dédié)
+SCRIPT_DIR="$(dirname "$0")"
+if [ -f "$SCRIPT_DIR/install-python-deps.sh" ]; then
+    bash "$SCRIPT_DIR/install-python-deps.sh" "$SCRIPT_DIR/requirements.txt"
+else
+    echo -e "\033[33;1m[INFO]\033[0m Script install-python-deps.sh non trouvé, installation des dépendances Python non effectuée."
+fi
+
