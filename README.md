@@ -240,6 +240,22 @@ cd scripts-sysaux/light_auto
 sudo ./install-scripts.sh
 ```
 
+### Installation des dépendances Python (light_auto)
+
+Le script `install-python-deps.sh` est appelé automatiquement à la fin de l'installation, mais vous pouvez aussi le lancer manuellement pour choisir le mode d'installation :
+- **venv local** : crée un environnement virtuel Python dans le dossier courant.
+- **utilisateur courant** : installe les paquets pour l'utilisateur actuel.
+- **autre utilisateur** : installe pour un utilisateur système spécifique.
+
+Lancez :
+```bash
+cd scripts-sysaux/light_auto
+./install-python-deps.sh
+```
+et suivez les instructions.
+
+> **Note** : L'installation complète (`install-scripts.sh`) gère aussi la copie des scripts, la création des dossiers, et l'ajout au groupe `audio` si besoin.
+
 ### Utilisation
 - Le service `light-auto` peut être activé/désactivé via systemd :
   ```bash
