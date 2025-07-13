@@ -41,7 +41,7 @@ scripts-sysaux/
 │   ├── install-scripts.sh
 │   ├── light_auto.py
 │   ├── requirements.txt
-│   ├── services/
+│   ├── service/
 │   │   └── light-auto.service
 │   └── sounds/
 │       ├── alert07.wav
@@ -230,7 +230,7 @@ Le capteur DHT11 possède trois broches principales :
 
 - **light_auto.py** : Script Python pour contrôler une LED selon la luminosité ambiante (capteur + GPIO).
 - **install-scripts.sh** : Installe le service systemd, les sons, le script et les dépendances.
-- **services/light-auto.service** : Fichier de service systemd pour lancer le script au démarrage.
+- **service/light-auto.service** : Fichier de service systemd pour lancer le script au démarrage.
 - **sounds/** : Sons d'alerte joués lors des changements d'état.
 - **requirements.txt** : Dépendances Python nécessaires (pygame, RPi.GPIO).
 
