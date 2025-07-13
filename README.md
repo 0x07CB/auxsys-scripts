@@ -237,10 +237,11 @@ Le capteur DHT11 possède trois broches principales :
 
 ### 🚀 Installation ultra-rapide du module light_auto (veilleuse)
 
+
 Pour installer et configurer automatiquement tout le nécessaire pour la veilleuse automatique sur votre Raspberry Pi (modèles 2, 3, 4), il suffit de copier-coller la ligne suivante dans votre terminal :
 
 ```bash
-sudo bash -c 'tmpdir=$(mktemp -d) && git clone --depth=1 https://github.com/0x07CB/auxsys-scripts.git "$tmpdir" && bash "$tmpdir/scripts-sysaux/light_auto/install-scripts.sh" && rm -rf "$tmpdir"'
+sudo bash -c 'tmpdir=$(mktemp -d) && git clone --depth=1 https://github.com/0x07CB/auxsys-scripts.git "$tmpdir" && bash "$tmpdir/scripts-sysaux/light_auto/install-scripts.sh" "$tmpdir/scripts-sysaux/light_auto" && rm -rf "$tmpdir"'
 ```
 
 Cette commande :
