@@ -2,6 +2,7 @@
 
 ---
 
+
 > 🚧 **État du projet : version préliminaire / en cours d'amélioration**
 >
 > Ce dépôt est **fonctionnel** pour les deux principales fonctionnalités :
