@@ -6,6 +6,9 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+# Define SCRIPT_DIR to get the absolute path of the script's directory
+SCRIPT_DIR="$(dirname \"$(realpath \"$0\")\")"
+
 # check if user 'gpiouser' exists, if not create it
 if ! id -u gpiouser &>/dev/null; then
     echo -e "\033[33;1m[\033[0m\033[33;5mINFO\033[0m\033[33;1m]\033[0m User 'gpiouser' does not exist. Creating it now..."
@@ -33,16 +36,13 @@ fi
 
 # check if /etc/systemd/system/light-auto.service exists
 if [ ! -f /etc/systemd/system/light-auto.service ]; then
-    # error messages an blinking red "ERROR" between whites brackets (ANSI COLORS)
-    # info messages an blinking yellow "INFO" between whites brackets (ANSI COLORS)
-    
     # info message about the missing service file, because it is not installed yet so we will create it
     echo -e "\033[33;1m[\033[0m\033[33;5mINFO\033[0m\033[33;1m]\033[0m The service file /etc/systemd/system/light-auto.service does not exist. It will be created during the installation process."
-    sudo cp ./service/light-auto.service /etc/systemd/system/light-auto.service
+    sudo cp "$SCRIPT_DIR/service/light-auto.service" /etc/systemd/system/light-auto.service
 else
     # info message about the existing service file, because it is already installed
     echo -e "\033[33;1m[\033[0m\033[33;5mINFO\033[0m\033[33;1m]\033[0m The service file /etc/systemd/system/light-auto.service already exists. It will be overwritten with the new version."
-    sudo cp ./service/light-auto.service /etc/systemd/system/light-auto.service
+    sudo cp "$SCRIPT_DIR/service/light-auto.service" /etc/systemd/system/light-auto.service
 fi
 
 # reload daemon and disable now light-auto.service
