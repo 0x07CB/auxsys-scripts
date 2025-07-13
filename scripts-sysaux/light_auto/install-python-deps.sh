@@ -29,7 +29,11 @@ else
         read -p "Nom de l'utilisateur cible : " cible
         if id "$cible" &>/dev/null; then
             echo -e "\033[33;1m[INFO]\033[0m Installation pour l'utilisateur $cible..."
-            sudo -u "$cible" -H bash -c "pip3 install --user -r '$REQ_FILE'"
+            cible_home=$(eval echo "~$cible")
+            sudo cp "$REQ_FILE" "$cible_home/requirements.txt"
+            sudo chown "$cible":"$cible" "$cible_home/requirements.txt"
+            sudo -u "$cible" -H bash -c "pip3 install --user -r '$cible_home/requirements.txt'"
+            sudo rm -f "$cible_home/requirements.txt"
             if [ $? -eq 0 ]; then
                 echo -e "\033[32;1m[OK]\033[0m Dépendances installées pour l'utilisateur $cible (--user)"
             else
