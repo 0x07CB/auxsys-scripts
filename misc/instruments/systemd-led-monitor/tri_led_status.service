@@ -1,0 +1,16 @@
+[Unit]
+Description=Indicateur tri-LED etat systemd
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/tri-led.sh
+Restart=always
+Environment=GPIO_LED_GREEN=18
+Environment=GPIO_LED_YELLOW=23
+Environment=GPIO_LED_RED=24
+Environment=LED_ACTIVE_LOW=0
+Environment=LED_POLL_INTERVAL=2
+
+[Install]
+WantedBy=multi-user.target
