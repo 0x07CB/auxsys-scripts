@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# Déployer un serveur Syslog
 sudo apt update \
     && sudo apt install rsyslog -y
+
+# Activer la réception réseau
+bash "$(dirname "$0")/enable-network-rx.sh"
 
 #execute ufw configuration script
 bash "$(dirname "$0")/ufw-configure.sh"
