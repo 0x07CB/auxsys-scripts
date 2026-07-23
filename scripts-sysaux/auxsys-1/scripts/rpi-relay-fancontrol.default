@@ -1,0 +1,32 @@
+# Configuration pour rpi-relay-fancontrol.sh
+# A copier vers /etc/default/rpi-relay-fancontrol
+
+# GPIOs utilisés par le script.
+# GPIO_VOLTAGE : relais de sélection de tension (3,3 V / 5 V)
+# GPIO_POWER   : relais d'alimentation générale du ventilateur
+GPIO_VOLTAGE=21
+GPIO_POWER=20
+
+# Fichier de température du CPU.
+TEMP_FILE="/sys/class/thermal/thermal_zone0/temp"
+
+# Seuils avec hysteresis (en degrés Celsius).
+# Les relais changent d'état aux seuils d'activation.
+# Ils reviennent à l'état précédent aux seuils de désactivation.
+TEMP_LOW_ON=50
+TEMP_LOW_OFF=45
+TEMP_HIGH_ON=65
+TEMP_HIGH_OFF=60
+
+# Intervalle entre deux mesures de température (en secondes).
+POLL_INTERVAL=5
+
+# Délai entre deux commutations de relais (en secondes).
+SWITCH_DELAY=0.30
+
+# Logging.
+# 1 = envoyer les messages vers syslog, 0 = désactivé.
+LOG_TO_SYSLOG=0
+
+# Chemin vers un fichier de log (laissez vide pour stdout uniquement).
+LOG_FILE=""
